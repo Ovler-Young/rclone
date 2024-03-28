@@ -310,40 +310,38 @@ func equal(ctx context.Context, src fs.ObjectInfo, dst fs.Object, opt equalOpt) 
 
 	// mod time differs but hash is the same to reset mod time if required
 	if opt.updateModTime {
-		if !SkipDestructive(ctx, src, "update modification time") {
-			// Size and hash the same but mtime different
-			// Error if objects are treated as immutable
-			if ci.Immutable {
-				fs.Errorf(dst, "Timestamp mismatch between immutable objects")
-				logger(ctx, Differ, src, dst, nil)
-				return false
-			}
-			// Update the mtime of the dst object here
-			err := dst.SetModTime(ctx, srcModTime)
-			if errors.Is(err, fs.ErrorCantSetModTime) {
-				logModTimeUpload(dst)
-				fs.Infof(dst, "src and dst identical but can't set mod time without re-uploading")
-				logger(ctx, Differ, src, dst, nil)
-				return false
-			} else if errors.Is(err, fs.ErrorCantSetModTimeWithoutDelete) {
-				logModTimeUpload(dst)
-				fs.Infof(dst, "src and dst identical but can't set mod time without deleting and re-uploading")
-				// Remove the file if BackupDir isn't set.  If BackupDir is set we would rather have the old file
-				// put in the BackupDir than deleted which is what will happen if we don't delete it.
-				if ci.BackupDir == "" {
-					err = dst.Remove(ctx)
-					if err != nil {
-						fs.Errorf(dst, "failed to delete before re-upload: %v", err)
-					}
+		// Size and hash the same but mtime different
+		// Error if objects are treated as immutable
+		if ci.Immutable {
+			fs.Errorf(dst, "Timestamp mismatch between immutable objects")
+			logger(ctx, Differ, src, dst, nil)
+			return false
+		}
+		// Update the mtime of the dst object here
+		err := dst.SetModTime(ctx, srcModTime)
+		if errors.Is(err, fs.ErrorCantSetModTime) {
+			logModTimeUpload(dst)
+			fs.Infof(dst, "src and dst identical but can't set mod time without re-uploading")
+			logger(ctx, Differ, src, dst, nil)
+			return false
+		} else if errors.Is(err, fs.ErrorCantSetModTimeWithoutDelete) {
+			logModTimeUpload(dst)
+			fs.Infof(dst, "src and dst identical but can't set mod time without deleting and re-uploading")
+			// Remove the file if BackupDir isn't set.  If BackupDir is set we would rather have the old file
+			// put in the BackupDir than deleted which is what will happen if we don't delete it.
+			if ci.BackupDir == "" {
+				err = dst.Remove(ctx)
+				if err != nil {
+					fs.Errorf(dst, "failed to delete before re-upload: %v", err)
 				}
-				logger(ctx, Differ, src, dst, nil)
-				return false
-			} else if err != nil {
-				err = fs.CountError(err)
-				fs.Errorf(dst, "Failed to set modification time: %v", err)
-			} else {
-				fs.Infof(src, "Updated modification time in destination")
 			}
+			logger(ctx, Differ, src, dst, nil)
+			return false
+		} else if err != nil {
+			err = fs.CountError(err)
+			fs.Errorf(dst, "Failed to set modification time: %v", err)
+		} else {
+			fs.Infof(src, "Updated modification time in destination")
 		}
 	}
 	logger(ctx, Match, src, dst, nil)
