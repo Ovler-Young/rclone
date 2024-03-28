@@ -296,17 +296,17 @@ func equal(ctx context.Context, src fs.ObjectInfo, dst fs.Object, opt equalOpt) 
 	}
 
 	// Check if the hashes are the same
-	same, ht, _ := CheckHashes(ctx, src, dst)
-	if !same {
-		fs.Debugf(src, "%v differ", ht)
-		logger(ctx, Differ, src, dst, nil)
-		return false
-	}
-	if ht == hash.None && !ci.RefreshTimes {
-		// if couldn't check hash, return that they differ
-		logger(ctx, Differ, src, dst, nil)
-		return false
-	}
+	// same, ht, _ := CheckHashes(ctx, src, dst)
+	// if !same {
+	// 	fs.Debugf(src, "%v differ", ht)
+	// 	logger(ctx, Differ, src, dst, nil)
+	// 	return false
+	// }
+	// if ht == hash.None && !ci.RefreshTimes {
+	// 	// if couldn't check hash, return that they differ
+	// 	logger(ctx, Differ, src, dst, nil)
+	// 	return false
+	// }
 
 	// mod time differs but hash is the same to reset mod time if required
 	if opt.updateModTime {
