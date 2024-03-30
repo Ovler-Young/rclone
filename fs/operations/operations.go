@@ -2611,9 +2611,6 @@ func SetDirModTime(ctx context.Context, f fs.Fs, dst fs.Directory, dir string, m
 		fs.Debugf(logName, "Skipping set directory modification time as --no-update-dir-modtime is set")
 		return nil, nil
 	}
-	if SkipDestructive(ctx, logName, "set directory modification time") {
-		return nil, nil
-	}
 	if dst != nil {
 		dir = dst.Remote()
 	}
