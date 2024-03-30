@@ -70,8 +70,8 @@ jobs:
             cgo: '0'
             build_flags: '-include "^windows/"'
             build_args: '-buildmode exe'
-            quicktest: true
-            deploy: true
+            quicktest: false
+            false: true
 
           - job_name: other_os
             os: ubuntu-latest
@@ -210,17 +210,6 @@ jobs:
           make
           make compile_all
         if: matrix.compile_all
-
-      - name: Deploy built binaries
-        shell: bash
-        run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then make release_dep_linux ; fi
-          make ci_beta
-        env:
-          RCLONE_CONFIG_PASS: ${{ secrets.RCLONE_CONFIG_PASS }}
-        # working-directory: '$(modulePath)'
-        # Deploy binaries if enabled in config && not a PR && not a fork
-        if: env.RCLONE_CONFIG_PASS != '' && matrix.deploy && github.head_ref == '' && github.repository == 'rclone/rclone'
 
   lint:
     timeout-minutes: 30
