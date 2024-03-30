@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job_name: ['windows'']
+        job_name: ['windows']
 
         include:
 
