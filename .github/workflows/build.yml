@@ -38,7 +38,7 @@ jobs:
             quicktest: false
             racequicktest: false
             librclonetest: false
-            deploy: false
+            deploy: true
 
           - job_name: linux_386
             os: ubuntu-latest
@@ -46,6 +46,7 @@ jobs:
             goarch: 386
             gotags: cmount
             quicktest: false
+            deploy: true
 
           - job_name: windows
             os: windows-latest
