@@ -30,7 +30,7 @@ jobs:
 
         include:
           - job_name: linux
-            os: ubuntu-latest
+            os: ubuntu-20.04
             go: '>=1.22.0-rc.1'
             gotags: cmount
             build_flags: '-include "^linux/"'
