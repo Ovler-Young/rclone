@@ -26,14 +26,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job_name: ['linux', 'linux_386', 'windows']
+        job_name: ['linux', 'linux_386']
 
         include:
           - job_name: linux
             os: ubuntu-latest
             go: '>=1.20.0-rc.1'
             gotags: cmount
-            build_flags: '-include "^linux/"'
+            build_flags: '-include "^linux/" -ldflags "-linkmode external -extldflags -static"'
             check: false
             quicktest: false
             racequicktest: false
@@ -45,6 +45,7 @@ jobs:
             go: '>=1.22.0-rc.1'
             goarch: 386
             gotags: cmount
+            build_flags: '-include "^linux/" -ldflags "-linkmode external -extldflags -static"'
             quicktest: false
             deploy: true
 
