@@ -26,9 +26,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job_name: ['windows']
+        job_name: ['linux', 'linux_386', 'windows']
 
         include:
+          - job_name: linux
+            os: ubuntu-latest
+            go: '>=1.22.0-rc.1'
+            gotags: cmount
+            build_flags: '-include "^linux/"'
+            check: false
+            quicktest: false
+            racequicktest: false
+            librclonetest: false
+            deploy: false
+
+          - job_name: linux_386
+            os: ubuntu-latest
+            go: '>=1.22.0-rc.1'
+            goarch: 386
+            gotags: cmount
+            quicktest: false
 
           - job_name: windows
             os: windows-latest
