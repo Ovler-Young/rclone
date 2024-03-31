@@ -180,5 +180,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: rclone-${{ matrix.job_name }}
-          path: rclone.exe
-        if: matrix.job_name == 'windows'
+          path: /
